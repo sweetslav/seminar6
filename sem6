@@ -1,0 +1,55 @@
+DELIMITER $$
+CREATE PROCEDURE even_nums()
+BEGIN
+	DECLARE i INT DEFAULT 1;
+
+    WHILE i <= 10 DO
+        IF i % 2 = 0 THEN
+            SELECT i;
+        END IF;
+        SET i = i + 1;
+    END WHILE;
+END $$
+DELIMITER ;
+
+CALL even_nums()
+
+DELIMITER $$
+CREATE FUNCTION seconds_converter(seconds INT)
+RETURNS VARCHAR(100)
+DETERMINISTIC
+BEGIN
+    DECLARE result VARCHAR(100);
+    DECLARE days INT;
+    DECLARE hours INT;
+    DECLARE minutes INT;
+    DECLARE secs INT;
+
+    SET days = seconds DIV (24 * 3600);
+    SET hours = (seconds % (24 * 3600)) DIV 3600;
+    SET minutes = (seconds % 3600) DIV 60;
+    SET secs = seconds % 60;
+
+    SET result = '';
+
+    IF days > 0 THEN
+        SET result = CONCAT(result, days, ' days ');
+    END IF;
+
+    IF hours > 0 THEN
+        SET result = CONCAT(result, hours, ' hours ');
+    END IF;
+
+    IF minutes > 0 THEN
+        SET result = CONCAT(result, minutes, ' minutes ');
+    END IF;
+
+    IF secs > 0 THEN
+        SET result = CONCAT(result, secs, ' seconds ');
+    END IF;
+
+    RETURN TRIM(result);
+END $$
+DELIMITER ;
+
+SELECT seconds_converter(123456);
